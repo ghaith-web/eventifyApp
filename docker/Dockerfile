@@ -16,6 +16,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy application source code
 COPY . .
 
+# Prepare Laravel directories (important!)
+RUN mkdir -p storage/logs bootstrap/cache && \
+    chown -R www-data:www-data /var/www && \
+    chmod -R 775 storage bootstrap/cache
+    
 # Install PHP dependencies
 RUN composer install --optimize-autoloader --no-dev || true
 
