@@ -1,0 +1,59 @@
+# Laravel Core
+/vendor/
+node_modules/
+
+# Laravel Environment Files
+.env
+.env.*.php
+
+# Laravel Cache, Logs & Session Files
+/storage/*.key
+/storage/app/public/*
+/storage/framework/*
+!/storage/framework/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
+
+# Laravel Config & Cache Files
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+
+# Compiled View Files
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+
+# Laravel Telescope (optional)
+/storage/telescope/*
+/telescope.php
+
+# IDE/Editor Files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# System Files
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+
+# NPM/Yarn Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# PHPUnit
+.phpunit.result.cache
+
+# Coverage reports
+coverage/
+
+# Laravel Mix or Vite
+/public/hot
+/public/storage
+/public/mix-manifest.json
+/public/build
+
+# Composer dump files
+composer.lock

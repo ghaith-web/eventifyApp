@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eventify-app
+  namespace: pfe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eventify-app
+  template:
+    metadata:
+      labels:
+        app: eventify-app
+    spec:
+      containers:
+        - name: laravel
+          image: ghaithbenali/eventify-v2:latest
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+            - name: app-code
+              mountPath: /var/www
+      volumes:
+        - name: app-code
+          hostPath:
+            path: /home/gaith/pfe/eventify
+            type: Directory

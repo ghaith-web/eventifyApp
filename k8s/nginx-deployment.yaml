@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eventify-nginx
+  namespace: pfe
+  labels:
+    app: eventify-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eventify-nginx
+  template:
+    metadata:
+      labels:
+        app: eventify-nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: app-code
+              mountPath: /var/www
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: app-code
+          hostPath:
+            path: /home/gaith/pfe/eventify
+            type: Directory
+        - name: nginx-config
+          configMap:
+            name: nginx-config

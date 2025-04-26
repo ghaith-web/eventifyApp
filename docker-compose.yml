@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: eventify-app
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www
+    working_dir: /var/www
+    depends_on:
+      - pgsql
+    networks:
+      - app-network
+  nginx:
+    image: nginx:alpine
+    container_name: eventify-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - app-network
+  pgsql:
+    image: postgres:15
+    container_name: eventify-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: eventify_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+volumes:
+  pgdata:
+networks:
+  app-network:
+    driver: bridge

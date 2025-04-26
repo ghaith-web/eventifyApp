@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: eventify-app
+  namespace: pfe
+spec:
+  selector:
+    app: eventify-app
+  ports:
+    - port: 9000
+      targetPort: 9000
+  type: ClusterIP
