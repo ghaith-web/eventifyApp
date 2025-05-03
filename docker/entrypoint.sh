@@ -36,6 +36,9 @@ php artisan storage:link || true
 echo "🛠 Running migrations..."
 php artisan migrate --force || true
 
+echo "🌱 Seeding roles..."
+php artisan db:seed --class=RoleSeeder || true
+
 # 🚀 Start php-fpm
 echo "🚀 Starting php-fpm..."
 exec php-fpm

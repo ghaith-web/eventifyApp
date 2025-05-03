@@ -23,6 +23,11 @@ class RoleRepository
         return $this->model->find($id);
     }
 
+    public function findByName(string $name): ?Role
+    {
+        return $this->model->where('name', $name)->first();
+    }
+
     public function create(array $data): Role
     {
         return $this->model->create($data);
