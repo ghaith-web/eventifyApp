@@ -12,7 +12,7 @@ class RoleRequest extends FormRequest
      */
     public function rules(): array
     {
-        $roleId = optional($this->route('role'))->id; // <--- super safe way
+        $roleId = optional($this->route('role'))->id;
 
         return [
             'name' => [

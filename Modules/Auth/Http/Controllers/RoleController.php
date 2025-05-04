@@ -7,10 +7,12 @@ use Modules\Auth\Http\Requests\RoleRequest;
 use Modules\Auth\Models\Role;
 use Modules\Auth\Services\RoleService;
 use Modules\Auth\Transformers\RoleResource;
+use App\Helpers\ApiResponseHelper;
+use Throwable;
 
 class RoleController extends Controller
 {
-    protected $roleService;
+    protected RoleService $roleService;
 
     public function __construct(RoleService $roleService)
     {
@@ -19,25 +21,41 @@ class RoleController extends Controller
 
     public function index()
     {
-        $roles = $this->roleService->all();
-        return RoleResource::collection($roles);
+        try {
+            $roles = $this->roleService->all();
+            return ApiResponseHelper::success(RoleResource::collection($roles), 'Roles retrieved successfully');
+        } catch (Throwable $e) {
+            return ApiResponseHelper::error('Failed to retrieve roles', 500, null, $e);
+        }
     }
 
     public function store(RoleRequest $request)
     {
-        $role = $this->roleService->create($request->validated());
-        return new RoleResource($role);
+        try {
+            $role = $this->roleService->create($request->validated());
+            return ApiResponseHelper::success(new RoleResource($role), 'Role created successfully', 201);
+        } catch (Throwable $e) {
+            return ApiResponseHelper::error('Failed to create role', 500, null, $e);
+        }
     }
 
     public function update(RoleRequest $request, Role $role)
     {
-        $role = $this->roleService->update($role, $request->validated());
-        return new RoleResource($role);
+        try {
+            $role = $this->roleService->update($role, $request->validated());
+            return ApiResponseHelper::success(new RoleResource($role), 'Role updated successfully');
+        } catch (Throwable $e) {
+            return ApiResponseHelper::error('Failed to update role', 500, null, $e);
+        }
     }
 
     public function destroy(Role $role)
     {
-        $this->roleService->delete($role);
-        return response()->json(['message' => 'Role deleted successfully']);
+        try {
+            $this->roleService->delete($role);
+            return ApiResponseHelper::success(null, 'Role deleted successfully', 204);
+        } catch (Throwable $e) {
+            return ApiResponseHelper::error('Failed to delete role', 500, null, $e);
+        }
     }
 }

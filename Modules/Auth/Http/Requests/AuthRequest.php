@@ -12,10 +12,10 @@ class AuthRequest extends FormRequest
             'name' => 'required|string|max:50',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
-            'role_id' => 'nullable|exists:roles,id', // changed from 'required' to 'nullable'
+            'role_id' => 'nullable|exists:roles,id',
         ];
     }
-    
+
 
     public function authorize(): bool
     {
