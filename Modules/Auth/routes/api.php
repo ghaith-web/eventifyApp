@@ -6,10 +6,12 @@ use Modules\Auth\Http\Controllers\AuthController;
 
 
 Route::prefix('roles')->group(function () {
-    Route::get('/', [RoleController::class, 'index']);
-    Route::post('/', [RoleController::class, 'store']);
-    Route::put('/{role}', [RoleController::class, 'update']);
-    Route::delete('/{role}', [RoleController::class, 'destroy']);
+    Route::middleware('auth:api')->group(function () {
+        Route::get('/', [RoleController::class, 'index']);
+        Route::post('/', [RoleController::class, 'store']);
+        Route::put('/{role}', [RoleController::class, 'update']);
+        Route::delete('/{role}', [RoleController::class, 'destroy']);
+    });
 });
 
 Route::prefix('auth')->group(function () {
