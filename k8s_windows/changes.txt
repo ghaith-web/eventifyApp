@@ -1,0 +1,49 @@
+eventify-local-path-storage.yaml:
+CHANGED:
+- Replaced 'StorageClass' using 'rancher.io/local-path' with a static PersistentVolume definition.
+- Set 'storageClassName: manual'
+- Used 'hostPath: /data/eventify' to simulate local storage on Docker Desktop.
+
+eventify-pvc.yaml:
+NEW FILE:
+- Added PersistentVolumeClaim to bind with the manual PersistentVolume (eventify-pv).
+
+eventify-service.yaml:
+NO CHANGES
+
+ingress.yaml:
+NO CHANGES
+
+laravel-depl.yaml:
+CHANGED:
+- Replaced 'hostPath: /home/gaith/pfe/eventify' with 'persistentVolumeClaim: eventify-pvc' for cross-platform compatibility.
+- Shared volume now backed by a manual PVC instead of local Linux path.
+
+laravel-service.yaml:
+NO CHANGES
+
+namespace.yaml:
+NO CHANGES
+
+nginx-config.yaml:
+NO CHANGES
+
+nginx-deployment.yaml:
+CHANGED:
+- Replaced 'hostPath: /home/gaith/pfe/eventify' with 'persistentVolumeClaim: eventify-pvc'.
+- Ensures shared volume compatibility with Windows-based Docker Desktop Kubernetes.
+
+postgres-deployment.yaml:
+NO CHANGES
+
+postgres-pvc.yaml:
+CHANGED:
+- Replaced 'storageClassName: eventify-local-path' with 'storageClassName: manual' to bind with manually defined PV.
+
+postgres-service.yaml:
+NO CHANGES
+
+postgres-pv.yaml:
+NEW FILE:
+- Defines PersistentVolume for PostgreSQL using 'hostPath: /data/postgres' for Docker Desktop.
+- Required for eventify-pgdata PVC to work on Windows.

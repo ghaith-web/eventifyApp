@@ -20,6 +20,10 @@ echo "🐘 Deploying PostgreSQL..."
 kubectl apply -f k8s/postgres-deployment.yaml
 kubectl apply -f k8s/postgres-service.yaml
 
+echo "🟥 Deploying Redis..."
+kubectl apply -f k8s/redis-deployment.yaml
+kubectl apply -f k8s/redis-service.yaml
+
 echo "🚀 Deploying Laravel app with local code mount..."
 kubectl apply -f k8s/laravel-deployment.yaml
 
@@ -69,4 +73,6 @@ echo ""
 echo "✅ Setup complete!"
 echo "🌐 Access Laravel at: http://$INGRESS_DOMAIN"
 echo "🐘 Access PostgreSQL at: localhost:15432 (user: postgres / password: postgres)"
+echo "🎯 Deploying Laravel worker..."
+kubectl apply -f k8s/laravel-worker-deployment.yaml
 echo ""

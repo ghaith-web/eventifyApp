@@ -13,6 +13,15 @@ kubectl delete deployment eventify-app -n "$NAMESPACE" --ignore-not-found
 kubectl delete deployment eventify-nginx -n "$NAMESPACE" --ignore-not-found
 kubectl delete service eventify-nginx -n "$NAMESPACE" --ignore-not-found
 
+# Delete Laravel Worker
+echo "🧵 Deleting Laravel Worker Deployment..."
+kubectl delete deployment eventify-worker -n "$NAMESPACE" --ignore-not-found
+
+# Delete Redis
+echo "🟥 Deleting Redis Deployment and Service..."
+kubectl delete deployment redis -n "$NAMESPACE" --ignore-not-found
+kubectl delete service redis -n "$NAMESPACE" --ignore-not-found
+
 # Delete PostgreSQL
 echo "🗑️ Deleting PostgreSQL Deployment and Service..."
 kubectl delete deployment eventify-pg -n "$NAMESPACE" --ignore-not-found
