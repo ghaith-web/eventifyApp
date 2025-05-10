@@ -1,4 +1,5 @@
 {
     "Auth": true,
-    "Events": true
+    "Events": true,
+    "Location": true
 }

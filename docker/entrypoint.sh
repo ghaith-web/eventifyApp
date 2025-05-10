@@ -39,6 +39,10 @@ php artisan migrate --force || true
 echo "🌱 Seeding roles..."
 php artisan db:seed --class=RoleSeeder || true
 
-# 🚀 Start php-fpm
-echo "🚀 Starting php-fpm..."
-exec php-fpm
+if [ "$1" = "worker" ]; then
+  echo "🧵 Starting Laravel queue worker..."
+  exec php artisan queue:work --tries=3 --timeout=90
+else
+  echo "🚀 Starting php-fpm..."
+  exec php-fpm
+fi
