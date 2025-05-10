@@ -46,4 +46,4 @@ RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 EXPOSE 9000
 
 # Start php-fpm through entrypoint
-ENTRYPOINT ["/var/www/docker/entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
