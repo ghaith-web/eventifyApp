@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eventify-worker
+  namespace: pfe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eventify-worker
+  template:
+    metadata:
+      labels:
+        app: eventify-worker
+    spec:
+      containers:
+        - name: worker
+          image: ghaithbenali/eventify-v2:latest
+          workingDir: /var/www/html
+          command: ["php", "artisan", "queue:listen", "--tries=3", "--timeout=90"]
+          volumeMounts:
+            - name: app-code
+              mountPath: /var/www/html
+          env:
+            - name: APP_ENV
+              value: local
+            - name: QUEUE_CONNECTION
+              value: redis
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_CLIENT
+              value: phpredis
+            - name: DB_HOST
+              value: eventify-pg
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_DATABASE
+              value: eventify_db
+            - name: DB_USERNAME
+              value: postgres
+            - name: DB_PASSWORD
+              value: postgres
+      volumes:
+        - name: app-code
+          persistentVolumeClaim:
+            claimName: eventify-pvc

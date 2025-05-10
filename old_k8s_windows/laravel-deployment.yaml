@@ -29,6 +29,7 @@ spec:
       containers:
         - name: laravel
           image: ghaithbenali/eventify-v2:latest
+          command: ["php-fpm"]
           ports:
             - containerPort: 9000
           volumeMounts:
