@@ -34,5 +34,4 @@ spec:
               mountPath: /var/www
       volumes:
         - name: app-code
-          persistentVolumeClaim:
-            claimName: eventify-pvc
+          emptyDir: {}

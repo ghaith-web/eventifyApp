@@ -30,5 +30,4 @@ spec:
               mountPath: /var/lib/postgresql/data
       volumes:
         - name: pgdata
-          persistentVolumeClaim:
-            claimName: eventify-pgdata
+          emptyDir: {}

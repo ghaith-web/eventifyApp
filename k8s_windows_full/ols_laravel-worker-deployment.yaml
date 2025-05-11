@@ -44,4 +44,5 @@ spec:
               value: postgres
       volumes:
         - name: app-code
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: eventify-pvc
