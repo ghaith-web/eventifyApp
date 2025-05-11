@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy app source code
-COPY ../app/ .
+COPY . .
 
 # Ensure Laravel folders are writable
 RUN mkdir -p storage/logs bootstrap/cache && \
