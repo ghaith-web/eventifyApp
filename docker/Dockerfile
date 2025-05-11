@@ -32,7 +32,7 @@ RUN mkdir -p storage/logs bootstrap/cache && \
     chmod -R 775 storage bootstrap/cache
 
 
-COPY docker/entrypoint.sh /var/www/docker/entrypoint.sh
+COPY entrypoint.sh /var/www/docker/entrypoint.sh
 # Fix line endings and permissions for entrypoint.sh
 RUN dos2unix /var/www/docker/entrypoint.sh && chmod +x /var/www/docker/entrypoint.sh
 
