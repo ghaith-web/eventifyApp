@@ -8,7 +8,7 @@ WORKDIR /var/www
 RUN echo "🔧 Updating apt and installing dependencies..." && \
     apt-get update && apt-get install -y \
         git curl zip unzip libzip-dev libpng-dev libonig-dev libxml2-dev libpq-dev libpq5 npm netcat-openbsd \
-        pkg-config libssl-dev autoconf make && \
+        pkg-config libssl-dev autoconf make dos2unix && \
     echo "📦 Installing PHP extensions..." && \
     docker-php-ext-install pdo pdo_pgsql pgsql pdo_mysql zip mbstring exif pcntl bcmath gd && \
     echo "📡 Installing and enabling Redis extension..." && \
@@ -20,18 +20,21 @@ RUN echo "🔧 Updating apt and installing dependencies..." && \
     rm -rf /var/lib/apt/lists/* && \
     echo "✅ System setup complete!"
 
-
-
 # Install Composer (from official Composer image)
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy application source code
 COPY . .
 
-# Prepare Laravel directories (important!)
+# Prepare Laravel directories
 RUN mkdir -p storage/logs bootstrap/cache && \
     chown -R www-data:www-data /var/www && \
     chmod -R 775 storage bootstrap/cache
+
+
+COPY docker/entrypoint.sh /var/www/docker/entrypoint.sh
+# Fix line endings and permissions for entrypoint.sh
+RUN dos2unix /var/www/docker/entrypoint.sh && chmod +x /var/www/docker/entrypoint.sh
 
 # Install PHP dependencies
 RUN composer install --optimize-autoloader --no-dev || true
@@ -45,5 +48,5 @@ RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 # Expose PHP-FPM port
 EXPOSE 9000
 
-# Start php-fpm through entrypoint
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# Use shell wrapper to ensure cross-platform compatibility
+ENTRYPOINT ["sh", "/var/www/docker/entrypoint.sh"]
