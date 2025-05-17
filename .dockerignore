@@ -1,12 +1,6 @@
 # Ignore node modules and vendor (will be rebuilt in image)
 node_modules
 vendor
-
-# Environment files
-.env
-.env.local
-.env.*.local
-
 # Laravel storage & cache (will be re-linked)
 storage/*
 !storage/app/public
