@@ -10,4 +10,5 @@ Route::get('/', function () {
 Route::get('/test-job', function () {
     TestRedisQueueJob::dispatch();
     return 'Job dispatched!';
+
 });
