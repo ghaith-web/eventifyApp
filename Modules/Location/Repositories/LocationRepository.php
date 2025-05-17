@@ -101,4 +101,9 @@ class LocationRepository
     {
         return $this->model->select('id', 'name')->orderBy('name')->get();
     }
+
+    public function getCountryCount(): int
+    {
+        return $this->model->count();
+    }
 }
