@@ -15,6 +15,12 @@ class TestRedisQueueJob implements ShouldQueue
 
     public function handle(): void
     {
-        Log::info('✅ TestRedisQueueJob executed successfully from Redis!');
+        try {
+            Log::info('✅ TestRedisQueueJob executed successfully from Redis!');
+        } catch (\Exception $e) {
+            Log::error('❌ TestRedisQueueJob failed: ' . $e->getMessage());
+            throw $e;
+        }
     }
+
 }
