@@ -3,6 +3,8 @@
 namespace Modules\Location\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Modules\Location\Transformers\CityResource;
+use Modules\Location\Transformers\CountryResource;
 use Modules\Location\Services\LocationService;
 use App\Helpers\ApiResponseHelper;
 use Throwable;
@@ -20,7 +22,7 @@ class LocationController extends Controller
     {
         try {
             $countries = $this->locationService->getAllCountries();
-            return ApiResponseHelper::success($countries, 'Countries loaded successfully');
+            return ApiResponseHelper::success(CountryResource::collection($countries), 'Countries loaded successfully');
         } catch (Throwable $e) {
             return ApiResponseHelper::error('Failed to load countries', 500, null, $e);
         }
@@ -30,7 +32,7 @@ class LocationController extends Controller
     {
         try {
             $cities = $this->locationService->getCitiesByCountryId($countryId);
-            return ApiResponseHelper::success($cities, 'Cities loaded successfully');
+            return ApiResponseHelper::success(CityResource::collection($cities), 'Cities loaded successfully');
         } catch (Throwable $e) {
             return ApiResponseHelper::error('Failed to load cities', 500, null, $e);
         }
