@@ -2,6 +2,7 @@
 
 namespace Modules\Location\Services;
 
+use App\Jobs\Location\StoreCountriesJob;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Modules\Location\Repositories\LocationRepository;
@@ -21,40 +22,31 @@ class LocationService
      */
     public function getAllCountries()
     {
-        // Step 1: Try local DB first
         $local = $this->repository->getCountryList();
-        if ($local->count() > 0) {
-            return $local;
-        }
+        $localCount = $local->count();
 
-        // Step 2: If DB is empty, call CountriesNow API
         try {
-            $res = Http::timeout(10)->get('https://countriesnow.space/api/v0.1/countries');
+            $response = Http::timeout(10)->get('https://countriesnow.space/api/v0.1/countries');
 
-            if ($res->successful() && isset($res['data'])) {
-                foreach ($res['data'] as $item) {
-                    try {
-                        $countryName = $item['country'] ?? null;
-                        $cities = $item['cities'] ?? [];
+            if ($response->successful() && isset($response['data']) && is_array($response['data'])) {
+                $remoteCountries = $response['data'];
+                $remoteCount = count($remoteCountries);
 
-                        if ($countryName && is_array($cities)) {
-                            $this->repository->storeCountryWithCities($countryName, $cities);
-                        } else {
-                            Log::warning("Invalid data format for item: " . json_encode($item));
-                        }
-                    } catch (\Exception $e) {
-                        Log::error("Failed to store country: {$item['country']} — " . $e->getMessage());
-                    }
+                if ($remoteCount > $localCount) {
+                    Log::info("📦 Remote has more countries ($remoteCount vs $localCount). Dispatching update job.");
+                    StoreCountriesJob::dispatch();
+                } else {
+                    Log::info("📦 Local country data is up to date.");
                 }
-
-                return $this->repository->getCountryList();
+            } else {
+                Log::error("❌ Failed to fetch countries from API. Status: {$response->status()}");
             }
-        } catch (Exception $e) {
-            Log::error('CountriesNow API failed: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            Log::error("❌ Exception while checking countries from API: {$e->getMessage()}");
         }
-
-        return collect([]);
+        return $local;
     }
+
 
     /**
      * Get cities for a given country ID (API first, fallback to DB)
